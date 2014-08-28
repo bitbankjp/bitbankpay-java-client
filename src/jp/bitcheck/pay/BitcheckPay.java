@@ -19,7 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class BitcheckPay {
 	
-	private static final String BASE_URL = "https://bitcheckpay.jp/api/v1/";
+	private static final String BASE_URL = "https://settlement.bitcheck.jp/api/v1/";
 	
 	private String apiKey;
 	private HttpClient client;

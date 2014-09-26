@@ -1,4 +1,4 @@
-package jp.bitcheck.pay;
+package jp.bitbank.pay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,9 +17,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-public class BitcheckPay {
+public class BitbankPay {
 	
-	private static final String BASE_URL = "https://settlement.bitcheck.jp/api/v1/";
+	private static final String BASE_URL = "https://api.bitbankpay.jp/api/v1/";
 	
 	private String apiKey;
 	private HttpClient client;
@@ -31,7 +31,7 @@ public class BitcheckPay {
 	private String orderID;
 	private String userMail;
 	
-	public BitcheckPay(String apiKey) {
+	public BitbankPay(String apiKey) {
 		this.apiKey = apiKey;
 		this.auth = new String(Base64.encodeBase64((this.apiKey).getBytes()));
 		client = HttpClientBuilder.create().build();
@@ -48,6 +48,62 @@ public class BitcheckPay {
 			
 			post.addHeader("Authorization", "Basic " + this.auth);
 			post.setEntity(new UrlEncodedFormEntity(getParams(price, currency, itemName), "UTF-8"));
+			
+			HttpResponse response = client.execute(post);
+			
+			return getContent(response);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public String acceptBitcoin(String id) {
+		
+		String url = BASE_URL + "accept_bitcoin";
+		
+		try {
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>() ;
+			params.add( new BasicNameValuePair("uuid[]", id));
+			
+			HttpPost post = new HttpPost(url);
+			
+			post.addHeader("Authorization", "Basic " + this.auth);
+			post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+			
+			HttpResponse response = client.execute(post);
+			
+			return getContent(response);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public String acceptJpyYen(String id) {
+		
+		String url = BASE_URL + "accept_jpyyen";
+		
+		try {
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>() ;
+			params.add( new BasicNameValuePair("uuid[]", id));
+			
+			HttpPost post = new HttpPost(url);
+			
+			post.addHeader("Authorization", "Basic " + this.auth);
+			post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 			
 			HttpResponse response = client.execute(post);
 			
